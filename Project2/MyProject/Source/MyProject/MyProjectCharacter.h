@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PickUpActor.h"
 #include "MyProjectCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -62,6 +63,15 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
+
+private:
+	TArray<APickUpActor*> playerInventory;
+
+public:
+	void AddToInventory(APickUpActor* pickUpItem);
+
+	UFUNCTION(BlueprintCallable)
+	void PrintInventory();
 
 public:
 	/** Returns CameraBoom subobject **/

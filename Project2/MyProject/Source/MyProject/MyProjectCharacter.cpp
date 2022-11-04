@@ -76,6 +76,23 @@ void AMyProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMyProjectCharacter::OnResetVR);
 }
 
+void AMyProjectCharacter::AddToInventory(APickUpActor* pickUpItem)
+{
+	playerInventory.Add(pickUpItem);
+}
+
+void AMyProjectCharacter::PrintInventory()
+{
+	FString sInventory = "";
+
+	for(APickUpActor* actor: playerInventory)
+	{
+		sInventory.Append(actor->pickUpActorName);
+		sInventory.Append(" | ");
+	}
+
+}
+
 
 void AMyProjectCharacter::OnResetVR()
 {
