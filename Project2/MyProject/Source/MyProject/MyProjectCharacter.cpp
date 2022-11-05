@@ -81,16 +81,20 @@ void AMyProjectCharacter::AddToInventory(APickUpActor* pickUpItem)
 	playerInventory.Add(pickUpItem);
 }
 
-void AMyProjectCharacter::PrintInventory()
+void AMyProjectCharacter::UpdateInventory()
 {
-	FString sInventory = "";
+	//FString sInventory = "";
 
-	for(APickUpActor* actor: playerInventory)
-	{
-		sInventory.Append(actor->pickUpActorName);
-		sInventory.Append(" | ");
-	}
+	//for(APickUpActor* actor: playerInventory)
+	//{
+	//	sInventory.Append(actor->pickUpActorName);
+	//	sInventory.Append(" | ");
+	//}
 
+	//GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);
+	
+	//call update
+	OnUpdateInventory.Broadcast(playerInventory);
 }
 
 

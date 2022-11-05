@@ -2,6 +2,8 @@
 
 
 #include "PickUpActor.h"
+#include "MyProjectCharacter.h"
+
 
 // Sets default values
 APickUpActor::APickUpActor()
@@ -15,7 +17,8 @@ APickUpActor::APickUpActor()
 	this->RootComponent = sceneComponent;
 
 	this->itemMesh = CreateAbstractDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
-	this->itemMesh->AttachTo(this->RootComponent);
+	this->itemMesh->SetupAttachment(this->RootComponent);
+	//this->itemMesh->AttachTo(this->RootComponent);
 
 	this->rotationRate = FRotator(0.0f, 180.f, 0.0f);
 
@@ -23,6 +26,7 @@ APickUpActor::APickUpActor()
 	this->boxCollider->SetGenerateOverlapEvents(true);
 	this->boxCollider->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	this->boxCollider->OnComponentBeginOverlap.AddDynamic(this, &APickUpActor::OnOverlapBegin);
+	//this->boxCollider->SetupAttachment(this->RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	this->boxCollider->AttachToComponent(this->RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
 	speed = 1.0f;
@@ -61,7 +65,7 @@ void APickUpActor::OnInteract()
 {
 	FString pickUp = FString::Printf(TEXT("Picked up: %s"), *pickUpActorName);
 
-	AMyProjectCharacter* player = Cast<AMyProjectCharacter>(UGamePlayStatics::GetPlayerCharacter(this, 0));
+	AMyProjectCharacter* player = Cast<AMyProjectCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 	
 	if (player)
 	{

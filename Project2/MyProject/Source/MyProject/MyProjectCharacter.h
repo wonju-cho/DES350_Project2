@@ -7,6 +7,10 @@
 #include "PickUpActor.h"
 #include "MyProjectCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateInventoryDelegate, const TArray<APickUpActor*>&, InventoryItems);
+
+class UInputComponent;
+
 UCLASS(config=Game)
 class AMyProjectCharacter : public ACharacter
 {
@@ -71,7 +75,10 @@ public:
 	void AddToInventory(APickUpActor* pickUpItem);
 
 	UFUNCTION(BlueprintCallable)
-	void PrintInventory();
+	void UpdateInventory();
+	
+	UPROPERTY(BlueprintAssignable, Category = "PickUp")
+		FUpdateInventoryDelegate OnUpdateInventory;
 
 public:
 	/** Returns CameraBoom subobject **/

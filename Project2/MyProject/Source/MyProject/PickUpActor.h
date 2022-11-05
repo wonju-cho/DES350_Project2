@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/PrimitiveComponent.h"
-#include "MyProjectCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "PickUpActor.generated.h"
 
@@ -47,8 +46,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* boxCollider;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
 	FString pickUpActorName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	UTexture2D* pickUpActorImage;
 
 	virtual void OnInteract();
 
