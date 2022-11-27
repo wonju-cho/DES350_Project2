@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "MyProjectCharacter.h"
 #include "CharacterController.h"
+#include "MyProjectCharacter.h"
 
 void ACharacterController::BeginPlay ()
 {

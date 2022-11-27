@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Definitions.h"
 #include "Interactable.h"
 #include "GameFramework/Character.h"
 #include "Interactable.h"
@@ -36,6 +37,16 @@ public:
 	void OnActorEnter(AActor* interactiveActor);
 
 	void OnLeaveActor();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnShowUI(FName characterName);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnHideUI();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnShowQuestInfo(FQuest quest);
+	
 protected:
 	AActor* currentInteractiveActor;
 

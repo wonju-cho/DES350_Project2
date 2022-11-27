@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Definitions.h"
 #include "GameFramework/GameModeBase.h"
 #include "MyProjectGameMode.generated.h"
 
@@ -13,7 +14,28 @@ class AMyProjectGameMode : public AGameModeBase
 
 public:
 	AMyProjectGameMode();
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest System")
+	class UItemData* itemDataBase;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest System")
+	class UQuestData* questDataBase;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
+	FItem FindItem(FName itemID, bool& success);
+
+	FItem FindItem_Implementation(FName itemID, bool& success);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
+	FQuest FindQuest(FName questID, bool& success);
+
+	FQuest FindQuest_Implementation(FName questID, bool& success);
+	
+	
 };
+
 
 
 
