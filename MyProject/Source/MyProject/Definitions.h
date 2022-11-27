@@ -6,42 +6,59 @@
 #include "Engine/DataAsset.h"
 #include "Definitions.generated.h"
 
+
 USTRUCT(BlueprintType)
 struct FQuest
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_USTRUCT_BODY()	
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	FName characterName;
+	FName CharacterName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	FName questID;
+	FName QuestID;	
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	FText message;
+	FText Message;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	FText completeMessage;
+	FText SortDescription;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	FName itemID;
+	FText CompleteMessage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	TSoftObjectPtr<UTexture2D> iconReference;
+	FName ItemID;
 
-	bool isCompleted;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Quest")
+	UTexture2D* ItemQuestTexture;
+	
 };
 
+
 UCLASS(BlueprintType)
-class UQuestData: public UDataAsset
+class UQuestData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
-	TArray<FQuest> questData;
-		
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Quest")
+	TArray<FQuest> QuestData;	
 };
+
+USTRUCT(BlueprintType)
+struct FQuestItem
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
+	FName QuestID;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
+	bool IsCompleted;
+};
+
 
 USTRUCT(BlueprintType)
 struct FItem
@@ -49,27 +66,34 @@ struct FItem
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
-	FName itemID;
+	FName ItemID;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item")
-	TSoftObjectPtr<UTexture2D> iconReference;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
+	FText Name;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
+	FText Description;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Item")
-	TSoftObjectPtr<UStaticMesh> meshReference;
+	UTexture2D* ItemIcon;
 
-	
+	UPROPERTY(BlueprintReadOnly, Category = "Player Inventory")
+	int32 Quantity;
 };
 
+
+
 UCLASS(BlueprintType)
-class UItemData: public UDataAsset
+class UItemData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item")
-	TArray<FItem> itemData;
-		
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data")
+	TArray<FItem> ItemData;
 };
+
 
 /**
  * 

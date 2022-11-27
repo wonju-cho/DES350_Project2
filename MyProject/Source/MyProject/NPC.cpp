@@ -27,6 +27,8 @@ void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 
+	isQuestActivated = true;
+	
 	SetActorTickEnabled(true);
 }
 
@@ -52,10 +54,10 @@ void ANPC::BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 		if(dotProduct < 0.0f)
 		{
 			playerCharacter = otherCharacter;
-
-			//playerCharacter->StartLookAt(this);
-
+			
 			playerCharacter->OnActorEnter(this);
+
+			playerCharacter->OnShowUI(characterName);
 
 			OnPlayerEnter();
 		}
@@ -68,33 +70,66 @@ void ANPC::EndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, U
 {
 	if(playerCharacter != nullptr)
 	{
-		//playerCharacter->StoopLookat();
 		playerCharacter->OnLeaveActor();
 		playerCharacter->OnHideUI();
 	}
 	playerCharacter = nullptr;
 }
 
-FName ANPC::GetName ()
-{
-	return characterName;
-}
-
 void ANPC::OnInteract_Implementation ()
 {
 	AMyProjectGameMode* gameMode = Cast<AMyProjectGameMode>(GetWorld()->GetAuthGameMode());
 
-	if(gameMode != nullptr)
+	if(gameMode == nullptr)
+		return;
+
+	if(!isQuestActivated)
+		return;
+
+	bool success = false;
+
+	FQuest quest = gameMode->FindQuest(questID, success);
+
+	if(!success)
+		return;
+
+	bool bQuestAccepted = false;
+
+	FQuestItem questInfo;
+
+	bQuestAccepted = playerCharacter -> FindQuest(questID, questInfo);
+
+	if(!bQuestAccepted)
 	{
-		bool success = false;
+		playerCharacter->OnShowQuestInfo(quest);
+		playerCharacter->AcceptQuest(questID);
+	}
+	else
+	{
+		//if the player has quest then check the inventory and remove that item
+		if(!questInfo.IsCompleted)
+		{
+			if(playerCharacter->HasItem(quest.ItemID))
+			{
+				playerCharacter->RemoveItem(quest.ItemID);
+				playerCharacter->MarkQuestCompleted(questID);
 
-		FQuest quest = gameMode->FindQuest(questID, success);
-
-		if(success)
+				playerCharacter->OnShowQuestCompleted(quest.CompleteMessage);
+				isQuestActivated = false;
+			
+			}
+			else
+			{
+				playerCharacter->OnShowQuestInfo(quest);
+			}
+		}
+		else
 		{
 			playerCharacter->OnShowQuestInfo(quest);
 		}
+
 	}
+	
 }
 
 FName ANPC::GetQuestID ()
@@ -102,3 +137,7 @@ FName ANPC::GetQuestID ()
 	return questID;
 }
 
+FName ANPC::GetName ()
+{
+	return characterName;
+}

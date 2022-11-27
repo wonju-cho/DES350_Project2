@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Definitions.h"
-#include "Interactable.h"
 #include "GameFramework/Character.h"
 #include "Interactable.h"
+#include "Definitions.h"
 #include "MyProjectCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -38,21 +37,64 @@ public:
 
 	void OnLeaveActor();
 
+protected:
+
+	TArray<FQuestItem> questList;
+	
+	AActor* currentInteractiveActor;
+
+	IInteractable* currentInteractive;
+	
+public:
+	bool FindQuest(FName questID, FQuestItem& quest);
+
+	void AcceptQuest(FName questID);
+
+	void MarkQuestCompleted(FName questID);
+
+public:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnShowQuestInfo(FQuest Quest);
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnShowQuestCompleted(const FText& message);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnShowUpdatedQuestList(const TArray<FText>& questTextList);
+
+public:
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
 	void OnShowUI(FName characterName);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
 	void OnHideUI();
 	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
-	void OnShowQuestInfo(FQuest quest);
-	
 protected:
-	AActor* currentInteractiveActor;
+	void UpdateAndShowQuestList();
 
-	IInteractable* currentInteractive;
-	
+	//inventory
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	TArray<FItem> equipmentInventory;
+
+	//maximum slots
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	int32 totalEquipmentSlots = 6;
+
+public:
+
+	void AddItem(FName ItemID);
+
+	void RemoveItem(FName ItemID);
+
+	bool HasFreeInventorySlots();
+
+	bool HasItem(FName ItemID);
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void OnRefreshInventory();
+	
 	
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -79,6 +121,8 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 protected:
+	virtual void BeginPlay() override;
+
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface

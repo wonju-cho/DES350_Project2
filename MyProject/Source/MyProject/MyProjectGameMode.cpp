@@ -6,12 +6,7 @@
 
 AMyProjectGameMode::AMyProjectGameMode()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+
 }
 
 FItem AMyProjectGameMode::FindItem_Implementation (FName itemID, bool& success)
@@ -19,15 +14,16 @@ FItem AMyProjectGameMode::FindItem_Implementation (FName itemID, bool& success)
 	success = false;
 
 	FItem item;
+	
 	if(itemDataBase == nullptr)
 		return item;
 
-	for(int i = 0; i < itemDataBase->itemData.Num(); i++)
+	for(int i = 0; i < itemDataBase->ItemData.Num(); i++)
 	{
-		if(itemDataBase->itemData[i].itemID == itemID)
+		if(itemDataBase->ItemData[i].ItemID == itemID)
 		{
 			success = true;
-			return itemDataBase->itemData[i];
+			return itemDataBase->ItemData[i];
 		}
 	}
 	
@@ -42,12 +38,12 @@ FQuest AMyProjectGameMode::FindQuest_Implementation (FName questID, bool& succes
 	if(questDataBase == nullptr)
 		return quest;
 
-	for(int i = 0; i < questDataBase->questData.Num(); i++)
+	for(int i = 0; i < questDataBase->QuestData.Num(); i++)
 	{
-		if(questDataBase->questData[i].questID == questID)
+		if(questDataBase->QuestData[i].QuestID == questID)
 		{
 			success = true;
-			return questDataBase->questData[i];
+			return questDataBase->QuestData[i];
 		}
 	}
 	

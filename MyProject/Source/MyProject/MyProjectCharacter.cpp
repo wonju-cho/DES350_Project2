@@ -2,7 +2,9 @@
 
 #include "MyProjectCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "MyProjectGameMode.h"
 #include "Camera/CameraComponent.h"
+#include "Chaos/PBDCollisionConstraintsContact.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -85,6 +87,15 @@ void AMyProjectCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Lo
 		StopJumping();
 }
 
+void AMyProjectCharacter::BeginPlay ()
+{
+	Super::BeginPlay();
+
+	OnRefreshInventory();
+
+	questList.Empty();
+}
+
 void AMyProjectCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
@@ -102,8 +113,6 @@ void AMyProjectCharacter::Action()
 	if(currentInteractive != nullptr)
 	{
 		IInteractable::Execute_OnInteract(currentInteractiveActor);
-
-		currentInteractive->GetQuestID();
 	}
 }
 
@@ -126,6 +135,167 @@ void AMyProjectCharacter::OnLeaveActor ()
 {
 	currentInteractive = nullptr;
 	currentInteractiveActor = nullptr;
+}
+
+bool AMyProjectCharacter::FindQuest (FName questID, FQuestItem& quest)
+{
+	for(int i = 0; i < questList.Num(); i++)
+	{
+		if(questList[i].QuestID == questID)
+		{
+			quest = questList[i];
+			return true;
+		}
+	}
+	return false;
+}
+
+void AMyProjectCharacter::AcceptQuest (FName questID)
+{
+	bool questFound = false;
+	for(int i = 0; i < questList.Num(); i++)
+	{
+		if(questList[i].QuestID == questID)
+		{
+			questFound = true;
+			break;
+		}
+	}
+
+	if(!questFound)
+	{
+		FQuestItem newQuest;
+		newQuest.QuestID = questID;
+		newQuest.IsCompleted = false;
+		questList.Add(newQuest);
+
+		UpdateAndShowQuestList();
+	}
+}
+
+void AMyProjectCharacter::MarkQuestCompleted (FName questID)
+{
+	for(int i = 0; i < questList.Num(); i++)
+	{
+		if((questList[i].QuestID == questID) && (!questList[i].IsCompleted))
+		{
+			questList[i].IsCompleted = true;
+			break;
+		}
+	}
+	
+	UpdateAndShowQuestList();
+
+}
+
+void AMyProjectCharacter::UpdateAndShowQuestList ()
+{
+	AMyProjectGameMode* gameMode = Cast<AMyProjectGameMode>(GetWorld()->GetAuthGameMode());
+
+	if(gameMode != nullptr)
+	{
+		TArray<FText> questTextList;
+
+		for(int i = 0; i < questList.Num(); i++)
+		{
+			if(!questList[i].IsCompleted)
+			{
+				bool success = false;
+
+				FQuest quest = gameMode->FindQuest(questList[i].QuestID, success);
+
+				if(success)
+				{
+					questTextList.Add(quest.SortDescription);
+				}
+			}
+		}
+		OnShowUpdatedQuestList(questTextList);
+	}
+}
+
+void AMyProjectCharacter::AddItem (FName ItemID)
+{
+	for(int i = 0; i < equipmentInventory.Num(); i++)
+	{
+		if(equipmentInventory[i].ItemID == ItemID)
+		{
+			equipmentInventory[i].Quantity += 1;
+
+			OnRefreshInventory();
+
+			return;
+		}
+	}
+
+	if(equipmentInventory.Num() == totalEquipmentSlots)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[AHowToCharacter::AddItem] EquipmentInventory full: %d / %d "), equipmentInventory.Num(), totalEquipmentSlots);
+		return;
+	}
+
+	AMyProjectGameMode* gameMode = Cast<AMyProjectGameMode>(GetWorld()->GetAuthGameMode());
+
+	if(gameMode != nullptr)
+	{
+		bool found = false;
+		FItem itemFound = gameMode->FindItem(ItemID, found);
+
+		FItem newItem;
+		newItem.ItemID = ItemID;
+		newItem.Name = itemFound.Name;
+		newItem.Description = itemFound.Description;
+		newItem.Quantity = 1;
+		newItem.ItemIcon = itemFound.ItemIcon;
+
+		equipmentInventory.Add(newItem);
+	}
+
+	OnRefreshInventory();
+}
+
+void AMyProjectCharacter::RemoveItem (FName ItemID)
+{
+	int32 itemIndexToRemove = -1;
+
+	for(int i = 0; i < equipmentInventory.Num(); i++)
+	{
+		if(equipmentInventory[i].ItemID == ItemID)
+		{
+			equipmentInventory[i].Quantity -= 1;
+
+			if(equipmentInventory[i].Quantity <= 0)
+			{
+				itemIndexToRemove = i;
+
+				break;
+			}
+		}
+	}
+
+	if(itemIndexToRemove >= 0)
+	{
+		equipmentInventory.RemoveAt(itemIndexToRemove);
+	}
+
+	OnRefreshInventory();
+}
+
+bool AMyProjectCharacter::HasFreeInventorySlots ()
+{
+	return (equipmentInventory.Num() < totalEquipmentSlots);
+}
+
+bool AMyProjectCharacter::HasItem (FName ItemID)
+{
+	for(int i = 0; i < equipmentInventory.Num(); i++)
+	{
+		if(equipmentInventory[i].ItemID == ItemID)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void AMyProjectCharacter::MoveForward(float Value)

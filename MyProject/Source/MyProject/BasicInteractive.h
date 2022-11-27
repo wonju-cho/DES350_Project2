@@ -19,6 +19,15 @@ protected:
 	class UBoxComponent* trigger;
 
 	class AMyProjectCharacter* playerCharacter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interactive")
+	FName interactiveName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interactive")
+	FName QuestID;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interactive")
+	bool questActivated;
 	
 public:	
 	// Sets default values for this actor's properties

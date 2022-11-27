@@ -24,6 +24,8 @@ protected:
 	FName questID;
 
 	class AMyProjectCharacter* playerCharacter;
+
+	bool isQuestActivated = false;
 	
 public:
 	// Sets default values for this character's properties

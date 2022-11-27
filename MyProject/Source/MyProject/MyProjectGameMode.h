@@ -16,14 +16,14 @@ public:
 	AMyProjectGameMode();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest System")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item System")
 	class UItemData* itemDataBase;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest System")
 	class UQuestData* questDataBase;
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Item System")
 	FItem FindItem(FName itemID, bool& success);
 
 	FItem FindItem_Implementation(FName itemID, bool& success);

@@ -15,11 +15,11 @@ class MYPROJECT_API AItemInteractive : public ABasicInteractive, public IInterac
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TSubclassOf<class AActor> itemClass;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	// TSubclassOf<class AActor> itemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	FName itemName;
+	FName ItemID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bItemCollected;

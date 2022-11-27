@@ -3,6 +3,8 @@
 
 #include "ItemInteractive.h"
 
+#include "MyProjectCharacter.h"
+
 void AItemInteractive::BeginPlay ()
 {
 	Super::BeginPlay();
@@ -14,7 +16,7 @@ void AItemInteractive::OnPlayerBeginOverlap ()
 {
 	if(playerCharacter != nullptr)
 	{
-		//playerCharacter ->OnShowUI(itemName);
+		playerCharacter->OnShowUI(interactiveName);
 	}
 }
 
@@ -22,33 +24,37 @@ void AItemInteractive::OnPlayerEndOverlap ()
 {
 	if(playerCharacter != nullptr)
 	{
-		//playerCharacter ->OnHideUI();
+		playerCharacter->OnHideUI();
 	}
 }
 
 void AItemInteractive::OnInteract_Implementation ()
 {
-	IInteractable::OnInteract_Implementation();
-
 	if(bItemCollected)
 		return;
 
 	if(playerCharacter != nullptr)
 	{
-		bItemCollected = true;
+		if(playerCharacter->HasFreeInventorySlots())
+		{
+			playerCharacter->AddItem(ItemID);
+			
+			bItemCollected = true;
+			
+			OnItemCollected();
+		}
 
-		OnItemCollected();
 	}
 }
 
 FName AItemInteractive::GetName ()
 {
-	return itemName;
+	return interactiveName;
 }
 
 FName AItemInteractive::GetQuestID ()
 {
-	return "";
+	return QuestID;
 }
 
 
