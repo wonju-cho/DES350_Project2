@@ -123,6 +123,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	int32 questNum;
+	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
@@ -132,5 +134,24 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	//f1
+	UFUNCTION(BlueprintCallable)
+	void CheatGrape();
+
+	//f2
+	UFUNCTION(BlueprintCallable)
+	void CheatMeat();
+
+	//f3
+	UFUNCTION(BlueprintCallable)
+	void CheatSomething();
+
+	//f4
+	UFUNCTION(BlueprintCallable)
+	void CheatHay();
+	
+
+	
 };
 

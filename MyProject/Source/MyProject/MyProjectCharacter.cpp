@@ -48,6 +48,7 @@ AMyProjectCharacter::AMyProjectCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,6 +78,26 @@ void AMyProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 }
 
+void AMyProjectCharacter::CheatGrape ()
+{
+	AddItem(FName("GrapeItem"));
+}
+
+void AMyProjectCharacter::CheatMeat ()
+{
+	AddItem(FName("MeatItem"));
+}
+
+void AMyProjectCharacter::CheatSomething ()
+{
+	AddItem(FName("SomethingItem"));
+}
+
+void AMyProjectCharacter::CheatHay ()
+{
+	AddItem(FName("HayItem"));
+}
+
 void AMyProjectCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		Jump();
@@ -90,6 +111,9 @@ void AMyProjectCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Lo
 void AMyProjectCharacter::BeginPlay ()
 {
 	Super::BeginPlay();
+
+	AMyProjectGameMode* gameMode = Cast<AMyProjectGameMode>(GetWorld()->GetAuthGameMode());
+	questNum = gameMode->GetQuestNum();
 
 	OnRefreshInventory();
 
@@ -179,9 +203,16 @@ void AMyProjectCharacter::MarkQuestCompleted (FName questID)
 	{
 		if((questList[i].QuestID == questID) && (!questList[i].IsCompleted))
 		{
+			questNum--;
 			questList[i].IsCompleted = true;
 			break;
 		}
+	}
+
+	if(questNum <= 0)
+	{
+		AMyProjectGameMode* gameMode = Cast<AMyProjectGameMode>(GetWorld()->GetAuthGameMode());
+		gameMode->CallEndGame();
 	}
 	
 	UpdateAndShowQuestList();

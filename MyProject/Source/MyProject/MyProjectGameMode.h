@@ -23,6 +23,8 @@ protected:
 	class UQuestData* questDataBase;
 
 public:
+	int32 GetQuestNum();
+	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Item System")
 	FItem FindItem(FName itemID, bool& success);
 
@@ -32,8 +34,10 @@ public:
 	FQuest FindQuest(FName questID, bool& success);
 
 	FQuest FindQuest_Implementation(FName questID, bool& success);
-	
-	
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void CallEndGame();
+
 };
 
 

@@ -7,6 +7,7 @@
 #include "MyProjectGameMode.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/GameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ANPC::ANPC()
@@ -111,6 +112,17 @@ void ANPC::OnInteract_Implementation ()
 		{
 			if(playerCharacter->HasItem(quest.ItemID))
 			{
+				if(excitedAnimation != nullptr)
+				{
+					if(excitedSound != nullptr)
+					{
+						UGameplayStatics::PlaySoundAtLocation(this, excitedSound, GetActorLocation());
+					}
+					GetMesh()->PlayAnimation(excitedAnimation, true);
+				}
+
+				quest.isQuestCompleted = true;
+
 				playerCharacter->RemoveItem(quest.ItemID);
 				playerCharacter->MarkQuestCompleted(questID);
 

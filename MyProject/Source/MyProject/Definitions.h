@@ -32,6 +32,10 @@ struct FQuest
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Quest")
 	UTexture2D* ItemQuestTexture;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Quest")
+	bool isQuestCompleted;
+
 	
 };
 

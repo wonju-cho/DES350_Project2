@@ -17,10 +17,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NPC")
 	class UBoxComponent* trigger;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NPC")
 	FName characterName;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "NPC")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "NPC")
 	FName questID;
 
 	class AMyProjectCharacter* playerCharacter;
@@ -54,7 +56,13 @@ public:
 	void OnInteract_Implementation();
 	
 	FName GetQuestID() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	USoundBase* excitedSound;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* excitedMontage;
+	UAnimationAsset* excitedAnimation;
+
+
 };
