@@ -2,7 +2,6 @@
 
 #include "MyProjectGameMode.h"
 #include "MyProjectCharacter.h"
-#include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMyProjectGameMode::AMyProjectGameMode()
